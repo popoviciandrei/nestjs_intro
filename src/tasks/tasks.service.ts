@@ -62,5 +62,4 @@ export class TasksService {
 
     this.tasks.splice(taskIndex, 1);
   }
-
 }
