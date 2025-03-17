@@ -15,9 +15,4 @@ export class AuthController {
   login(@Body() loginDto: LoginDto) {
     return this.authService.login(loginDto);
   }
-
-  @Get('profile')
-  getProfile() {
-    return { user: 'Andrei' };
-  }
 }

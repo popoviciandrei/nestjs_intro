@@ -1,6 +1,9 @@
 import { Request } from 'express';
-import { User } from './user.interface';
 
+export interface JwtPayload {
+    email: string;
+    id: number;
+}
 export interface RequestUser extends Request {
-    user: User;
+    user: JwtPayload;
 }
