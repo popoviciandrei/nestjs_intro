@@ -14,6 +14,7 @@ import { TasksService } from './tasks.service';
 import { RequestUser } from 'src/auth/interfaces/requestUser.inteface';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
+import { ParseIntPipe } from 'src/shared/parse-int.pipe';
 
 @Controller('tasks')
 @UseGuards(AuthGuard('jwt'))
@@ -26,7 +27,10 @@ export class TasksController {
   }
 
   @Get(':id')
-  getTaskById(@Request() req: RequestUser, @Param('id') id: string) {
+  getTaskById(
+    @Request() req: RequestUser,
+    @Param('id', ParseIntPipe) id: number,
+  ) {
     return this.tasksService.getTaskById(+id, req.user.id);
   }
 
@@ -40,15 +44,18 @@ export class TasksController {
 
   @Put(':id')
   updateTaskStatus(
-    @Param('id') id: string,
+    @Param('id', ParseIntPipe) id: number,
     @Body() updateTaskDto: UpdateTaskDto,
     @Request() req: RequestUser,
   ) {
-    return this.tasksService.updateTaskStatus(+id, updateTaskDto, req.user.id);
+    return this.tasksService.updateTaskStatus(id, updateTaskDto, req.user.id);
   }
 
   @Delete(':id')
-  deleteTask(@Request() req: RequestUser, @Param('id') id: string) {
-    return this.tasksService.deleteTask(+id, req.user.id);
+  deleteTask(
+    @Request() req: RequestUser,
+    @Param('id', ParseIntPipe) id: number,
+  ) {
+    return this.tasksService.deleteTask(id, req.user.id);
   }
 }
