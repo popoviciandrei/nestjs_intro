@@ -34,7 +34,7 @@ export class TasksService {
     return task;
   }
 
-  updateTaskStatus(id: number, updateTaskDto: UpdateTaskDto, userId: number) {
+  updateTask(id: number, updateTaskDto: UpdateTaskDto, userId: number) {
     const taskIndex = this.tasks.findIndex(
       (task) => task.id === id && task.userId === userId,
     );
@@ -47,6 +47,20 @@ export class TasksService {
       ...this.tasks[taskIndex],
       ...updateTaskDto,
     };
+
+    return this.tasks[taskIndex];
+  }
+
+  updateTaskStatus(id: number, status: TaskStatus, userId: number) {
+    const taskIndex = this.tasks.findIndex(
+      (task) => task.id === id && task.userId === userId,
+    );
+
+    if (taskIndex === -1) {
+      throw new NotFoundException(`Task with id ${id} not found`);
+    }
+
+    this.tasks[taskIndex].status = status;
 
     return this.tasks[taskIndex];
   }

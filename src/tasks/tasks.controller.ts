@@ -3,6 +3,7 @@ import {
   Get,
   Post,
   Put,
+  Patch,
   Delete,
   Body,
   UseGuards,
@@ -13,7 +14,9 @@ import { AuthGuard } from '@nestjs/passport';
 import { TasksService } from './tasks.service';
 import { RequestUser } from 'src/auth/interfaces/requestUser.inteface';
 import { CreateTaskDto } from './dto/create-task.dto';
-import { UpdateTaskDto } from './dto/update-task.dto';
+import { UpdateTaskDto, TaskStatus } from './dto/update-task.dto';
+import { ParseIntPipe } from 'src/shared/parse-int.pipe';
+import { TaskStatusValidationPipe } from './pipes/task-status-validation.pipe';
 
 @Controller('tasks')
 @UseGuards(AuthGuard('jwt'))
@@ -26,7 +29,10 @@ export class TasksController {
   }
 
   @Get(':id')
-  getTaskById(@Request() req: RequestUser, @Param('id') id: string) {
+  getTaskById(
+    @Request() req: RequestUser,
+    @Param('id', ParseIntPipe) id: number,
+  ) {
     return this.tasksService.getTaskById(+id, req.user.id);
   }
 
@@ -39,16 +45,28 @@ export class TasksController {
   }
 
   @Put(':id')
-  updateTaskStatus(
-    @Param('id') id: string,
+  updateTask(
+    @Param('id', ParseIntPipe) id: number,
     @Body() updateTaskDto: UpdateTaskDto,
     @Request() req: RequestUser,
   ) {
-    return this.tasksService.updateTaskStatus(+id, updateTaskDto, req.user.id);
+    return this.tasksService.updateTask(id, updateTaskDto, req.user.id);
+  }
+
+  @Patch(':id/status')
+  updateTaskStatus(
+    @Param('id', ParseIntPipe) id: number,
+    @Body('status', TaskStatusValidationPipe) status: TaskStatus,
+    @Request() req: RequestUser,
+  ) {
+    return this.tasksService.updateTaskStatus(id, status, req.user.id);
   }
 
   @Delete(':id')
-  deleteTask(@Request() req: RequestUser, @Param('id') id: string) {
-    return this.tasksService.deleteTask(+id, req.user.id);
+  deleteTask(
+    @Request() req: RequestUser,
+    @Param('id', ParseIntPipe) id: number,
+  ) {
+    return this.tasksService.deleteTask(id, req.user.id);
   }
 }

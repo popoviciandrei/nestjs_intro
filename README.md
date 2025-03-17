@@ -37,6 +37,7 @@ A RESTful API built with NestJS that implements a task management system with us
 - **Task Management**
   - Create new tasks
   - Retrieve tasks (all tasks or by ID)
+  - Update task details
   - Update task status and details
   - Delete tasks
   - Tasks are user-specific (users can only access their own tasks)
