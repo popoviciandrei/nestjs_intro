@@ -27,7 +27,7 @@ export class TasksController {
 
   @Get(':id')
   getTaskById(@Request() req: RequestUser, @Param('id') id: string) {
-    return this.tasksService.getTaskById(+id, req?.user?.id);
+    return this.tasksService.getTaskById(+id, req.user.id);
   }
 
   @Post()
